@@ -1,0 +1,14 @@
+0.  It is a lung disease caused by inhaling silicate particles from an eruption of volcano.
+1.  It tells about the resources used.
+2.  16
+3.  to decrease computaional complexity and time.
+4.  loop iterates over the file character by character until end of the file. If it is apostrophe or a letter it is added.
+But if it is numeric or larger than the length defined it is not counted. If it is still a word then it is counted and checked for 
+misspelling and it is remembered. the time taken is remembered in time_check.
+5.  Because with fscanf you have to explicitly tell about the type you want to scan from the file. As in this 
+case you dont know what you might encounter to read in the file you read so fgetc is better choice.
+6.  Because we dont want the value to be changed this pointer is pointing.
+7.  
+8.  TODO
+9.  TODO
+10. TODO

@@ -1,0 +1,147 @@
+/**
+ * dictionary.c
+ *
+ * Computer Science 50
+ * Problem Set 5
+ *
+ * Implements a dictionary's functionality.
+ */
+
+#include <stdbool.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <string.h>
+#include "dictionary.h"
+#define BUCKETS 27
+//integer for counting dict words added
+int counter=0;
+//struct for hash table
+typedef struct tnode
+{
+    char cword[LENGTH+1];
+    struct tnode* next;
+}node;
+//node pointer array as buckets
+node* dic[BUCKETS];
+
+//hash function for hash table
+int hash_f(char* word);
+
+/**
+ * Returns true if word is in dictionary else false.
+ */
+bool check(const char* word)
+{
+ const int currlen=strlen(word);
+  
+ char cbuffer[LENGTH+1];
+ 
+ for(int i=0;i<currlen;i++)
+     {
+       cbuffer[i]=tolower(word[i]);
+      
+     }
+     
+ cbuffer[currlen]='\0';
+ 
+ int cbucket=hash_f(cbuffer);
+ printf("%i",cbucket);
+ 
+ while(dic[cbucket]->next!=NULL)
+ {
+     if((strcmp(cbuffer,dic[cbucket]->cword)==0))
+     {
+         return true;
+     }
+         dic[cbucket]=dic[cbucket]->next;
+ }
+ 
+  return false;
+}
+
+/**
+ * Loads dictionary into memory.  Returns true if successful else false.
+ */
+bool load(const char* dictionary)
+{
+    FILE *ptr = fopen(dictionary,"r");
+    char buffer[LENGTH+1];
+    int bucket;
+    //check for availability of dictionary file
+    if(ptr==NULL)
+    {
+        printf("could not open file \n");
+        return false;
+    }
+    else
+    {
+        //iterate over dict
+        while(fgets(buffer,sizeof(buffer),ptr))
+        {
+            
+            node* temp=malloc(sizeof(node));
+            if(temp==NULL)
+            {
+                fclose(ptr);
+                printf("SORRY NO MEMORY FOR TEMP!\n");
+                return false;
+            }
+            strcpy(temp->cword,buffer);
+            bucket=hash_f(temp->cword);
+            printf("%i",bucket);
+            if(dic[bucket]==NULL)
+            {
+                
+                temp->next=dic[bucket];
+                dic[bucket]=temp;
+            }
+            else
+            {
+                
+                temp->next=dic[bucket];
+                dic[bucket]=temp;
+                
+                
+            }
+            printf("%s",temp->cword);
+            counter++;
+            
+        }
+    }
+    fclose(ptr);
+    return true;
+}
+
+/**
+ * Returns number of words in dictionary if loaded else 0 if not yet loaded.
+ */
+unsigned int size(void)
+{
+    return counter;
+}
+
+/**
+ * Unloads dictionary from memory.  Returns true if successful else false.
+ */
+bool unload(void)
+{
+    
+    return true;
+}
+//hash function implementation
+int hash_f(char* word)
+{
+    int hash=0;
+    if(isalpha(word[0]))
+    {
+     hash=word[0]-'a';
+    }
+    else if(word[0]=='\'')
+    {
+    hash=26;
+    }
+    hash=hash%BUCKETS;
+    return hash;
+}
